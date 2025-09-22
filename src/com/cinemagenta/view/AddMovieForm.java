@@ -2,6 +2,7 @@ package com.cinemagenta.view;
 
 import com.cinemagenta.controller.MovieController;
 import com.cinemagenta.model.Movie;
+import com.cinemagenta.utils.InputValidator;
 
 import javax.swing.*;
 import java.awt.*;
@@ -69,6 +70,22 @@ public class AddMovieForm extends JFrame {
             JOptionPane.showMessageDialog(this,
                     "Debe completar todos los campos.",
                     "Error",
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+     
+        if (!InputValidator.isValidName(title)) {
+            JOptionPane.showMessageDialog(this,
+                    "El título contiene caracteres no permitidos. Evite símbolos como ^ % * $ @.",
+                    "Error en título",
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        if (!InputValidator.isValidName(director)) {
+            JOptionPane.showMessageDialog(this,
+                    "El nombre del director contiene caracteres no permitidos. Evite símbolos como ^ % * $ @.",
+                    "Error en director",
                     JOptionPane.ERROR_MESSAGE);
             return;
         }
