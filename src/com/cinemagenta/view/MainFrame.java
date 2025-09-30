@@ -3,6 +3,8 @@ package com.cinemagenta.view;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 
+import com.cinemagenta.view.SearchMovieForm;
+
 public class MainFrame extends JFrame {
 
     public MainFrame() {
@@ -21,6 +23,13 @@ public class MainFrame extends JFrame {
         JMenuItem addMovieItem = new JMenuItem("Agregar película");
         addMovieItem.addActionListener(this::openAddMovieForm);
         movieMenu.add(addMovieItem);
+        
+        JMenuItem searchMovieItem = new JMenuItem("Buscar / Editar / Eliminar película");
+        searchMovieItem.addActionListener(e -> {
+            SearchMovieForm searchForm = new SearchMovieForm();
+            searchForm.setVisible(true);
+        });
+        movieMenu.add(searchMovieItem);
 
         // Agregando menu a la barra
         menuBar.add(movieMenu);
