@@ -100,8 +100,18 @@ public class SearchMovieForm extends JFrame {
 
         int movieId = (int) tableModel.getValueAt(selectedRow, 0);
         Movie movie = controller.findMovieById(movieId);
+ 
         if (movie != null) {
             EditMovieForm editForm = new EditMovieForm(movie);
+            
+        // Refrescando resultados al cerrar ventana de edicion para que se reflejen las ediciones en la tabla
+        editForm.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosed(java.awt.event.WindowEvent e) {
+                searchMovies();
+            }
+        });
+      
             editForm.setVisible(true);
         } else {
             JOptionPane.showMessageDialog(this, "La película ya no existe.", "Error", JOptionPane.ERROR_MESSAGE);

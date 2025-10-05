@@ -3,6 +3,7 @@ package com.cinemagenta.view;
 import com.cinemagenta.controller.MovieController;
 import com.cinemagenta.model.Movie;
 import com.cinemagenta.utils.InputValidator;
+import com.cinemagenta.view.SearchMovieForm;
 
 import javax.swing.*;
 import java.awt.*;
