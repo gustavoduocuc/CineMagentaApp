@@ -137,4 +137,123 @@ public class MovieController {
             return false;
         }
     }
+    
+    public List<Movie> findMoviesByFilters(String genre, int yearFrom, int yearTo) {
+        List<Movie> movies = new ArrayList<>();
+
+        String sql = """
+            SELECT * FROM movie_catalog
+            WHERE (? = 'Todos' OR genre = ?)
+            AND release_year BETWEEN ? AND ?
+        """;
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement statement = conn.prepareStatement(sql)) {
+
+            statement.setString(1, genre); // comparación para el caso 'Todos'
+            statement.setString(2, genre); // comparación real
+            statement.setInt(3, yearFrom);
+            statement.setInt(4, yearTo);
+
+            ResultSet queryResult = statement.executeQuery();
+            while (queryResult.next()) {
+                Movie movie = new Movie(
+                        queryResult.getInt("id"),
+                        queryResult.getString("title"),
+                        queryResult.getString("director"),
+                        queryResult.getInt("release_year"),
+                        queryResult.getInt("duration_minutes"),
+                        queryResult.getString("genre")
+                );
+                movies.add(movie);
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Error al filtrar películas:");
+            e.printStackTrace();
+        }
+
+        return movies;
+    }
+    
+    public List<Movie> filterMovies(String genre, Integer startYear, Integer endYear) {
+        List<Movie> movies = new ArrayList<>();
+
+        StringBuilder sql = new StringBuilder("SELECT * FROM movie_catalog WHERE 1=1");
+
+        if (genre != null && !genre.isEmpty()) {
+            sql.append(" AND genre = ?");
+        }
+
+        if (startYear != null) {
+            sql.append(" AND release_year >= ?");
+        }
+
+        if (endYear != null) {
+            sql.append(" AND release_year <= ?");
+        }
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement statement = conn.prepareStatement(sql.toString())) {
+
+            int paramIndex = 1;
+
+            if (genre != null && !genre.isEmpty()) {
+                statement.setString(paramIndex++, genre);
+            }
+
+            if (startYear != null) {
+                statement.setInt(paramIndex++, startYear);
+            }
+
+            if (endYear != null) {
+                statement.setInt(paramIndex++, endYear);
+            }
+
+            ResultSet queryResult = statement.executeQuery();
+            while (queryResult.next()) {
+                Movie movie = new Movie(
+                    queryResult.getInt("id"),
+                    queryResult.getString("title"),
+                    queryResult.getString("director"),
+                    queryResult.getInt("release_year"),
+                    queryResult.getInt("duration_minutes"),
+                    queryResult.getString("genre")
+                );
+                movies.add(movie);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return movies;
+    }
+    
+    public List<Movie> getAllMovies() {
+        List<Movie> movies = new ArrayList<>();
+        String sql = "SELECT * FROM movie_catalog";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement statement = conn.prepareStatement(sql);
+             ResultSet queryResult = statement.executeQuery()) {
+
+            while (queryResult.next()) {
+                Movie movie = new Movie(
+                    queryResult.getInt("id"),
+                    queryResult.getString("title"),
+                    queryResult.getString("director"),
+                    queryResult.getInt("release_year"),
+                    queryResult.getInt("duration_minutes"),
+                    queryResult.getString("genre")
+                );
+                movies.add(movie);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return movies;
+    }
 }
